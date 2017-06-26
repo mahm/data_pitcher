@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    data_pitcher (0.1.0)
+    data_pitcher (0.1.1)
       activerecord (>= 3.2)
       google_drive
 
