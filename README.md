@@ -19,7 +19,7 @@ $ bundle install
 Initialize with:
 
 ```bash
-bundle exec rails generate data_pitcher:install
+$ bundle exec rails generate data_pitcher:install
 ```
 
 This adds the following files which are used for configuration:
@@ -76,13 +76,21 @@ To send multiple SQLs to multiple spreadsheets, add them to the array in the YAM
 The easiest way is to set the following Rake task to cron. This task executes all the commands defined in the YAML file.
 
 ```bash
-bundle exec rake data_pitcher:execute
+$ bundle exec rake data_pitcher:export:run
 ```
 
 Or, you can manually execute sending data programmatically as follows:
 
 ```ruby
 DataPitcher::Spreadsheet.new('<SPREADSHEET KEY>').replace_worksheet_with_query('<SQL QUERY STRING>')
+```
+
+### (Optionally) Check YAML definition
+
+By executing the following command, you can check whether the definition of YAML file is correct without actually sending data.
+
+```bash
+$ bundle exec rake data_pitcher:export:dry_run
 ```
 
 ## Contributing

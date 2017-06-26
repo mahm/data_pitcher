@@ -46,6 +46,13 @@ module DataPitcher
       fill_sheet(sql_query)
     end
 
+    def valid?
+      worksheet
+      true
+    rescue => e
+      false
+    end
+
     def session
       @session ||= ::GoogleDrive::Session.from_service_account_key(DataPitcher.configuration.google_service_account_json_path)
     end

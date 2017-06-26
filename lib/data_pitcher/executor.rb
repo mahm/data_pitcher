@@ -5,7 +5,14 @@ module DataPitcher
     end
 
     def execute
-      result(select(@query))
+      result(select_query)
+    end
+
+    def valid?
+      select_query
+      true
+    rescue => e
+      false
     end
 
     private
@@ -23,9 +30,9 @@ module DataPitcher
       result
     end
 
-    def select(query)
+    def select_query
       with_sandbox do
-        connection.exec_query(query)
+        connection.exec_query(@query)
       end
     end
 

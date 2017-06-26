@@ -11,11 +11,15 @@ module DataPitcher
       YAML.load(ERB.new(File.read(@yaml_path)).result)['data_pitcher']
     end
 
-    def execute
-      commands.each do |command|
-        # TODO: 例外処理
-        sql_query = File.read(command['sql_path'])
-        DataPitcher::Spreadsheet.new(command['spreadsheet_key']).replace_worksheet_with_query(sql_query)
+    def execute(dry_run: true)
+      commands.each.with_index(1) do |command, index|
+        begin
+          if DataPitcher::Command.new(command['spreadsheet_key'], command['sql_path'], dry_run: dry_run, index: index).execute
+            puts "##{index} command: sending completed."
+          end
+        rescue => e
+          puts "[ERROR] ##{index} command skipped: #{e.class} #{e.message}"
+        end
       end
     end
   end
