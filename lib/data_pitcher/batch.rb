@@ -13,7 +13,9 @@ module DataPitcher
 
     def execute
       commands.each do |command|
-        DataPitcher::Spreadsheet.new(command['spreadsheet_key'], command['sql_path']).replace_worksheet_with_query
+        # TODO: 例外処理
+        sql_query = File.read(command['sql_path'])
+        DataPitcher::Spreadsheet.new(command['spreadsheet_key']).replace_worksheet_with_query(sql_query)
       end
     end
   end

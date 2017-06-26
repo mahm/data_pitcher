@@ -2,9 +2,8 @@ require 'google_drive'
 
 module DataPitcher
   class Spreadsheet
-    def initialize(spreadsheet_key, sql_path)
+    def initialize(spreadsheet_key)
       @spreadsheet_key = spreadsheet_key
-      @sql_path = sql_path
     end
 
     def spreadsheet
@@ -26,8 +25,8 @@ module DataPitcher
       worksheet.save
     end
 
-    def fill_sheet
-      result = DataPitcher::Executor.new(read_query).execute
+    def fill_sheet(sql_query)
+      result = DataPitcher::Executor.new(sql_query).execute
       worksheet.reload
       # fill header
       result.header.each.with_index(1) do |val, col_index|
@@ -42,16 +41,9 @@ module DataPitcher
       worksheet.save
     end
 
-    def read_query
-      # TODO: 例外処理
-      File.open(@sql_path) do |file|
-        file.read
-      end
-    end
-
-    def replace_worksheet_with_query
+    def replace_worksheet_with_query(sql_query)
       clear_sheet
-      fill_sheet
+      fill_sheet(sql_query)
     end
 
     def session
