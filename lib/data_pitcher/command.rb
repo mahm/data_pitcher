@@ -26,6 +26,7 @@ module DataPitcher
         return false
       end
       spreadsheet.replace_worksheet_with_query(sql_query)
+      true
     end
 
     def spreadsheet

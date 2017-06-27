@@ -14,8 +14,11 @@ module DataPitcher
     def execute(dry_run: true)
       commands.each.with_index(1) do |command, index|
         begin
-          if DataPitcher::Command.new(command['spreadsheet_key'], command['sql_path'], dry_run: dry_run, index: index).execute
-            puts "##{index} command: sending completed."
+          elapsed_time, result = Time.elapsed_time do
+            DataPitcher::Command.new(command['spreadsheet_key'], command['sql_path'], dry_run: dry_run, index: index).execute
+          end
+          if result
+            puts "##{index} command: sending completed. #{elapsed_time}s"
           end
         rescue => e
           puts "[ERROR] ##{index} command skipped: #{e.class} #{e.message}"

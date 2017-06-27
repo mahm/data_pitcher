@@ -2,6 +2,8 @@ require 'google_drive'
 
 module DataPitcher
   class Spreadsheet
+    BATCH_SIZE = 1000
+
     def initialize(spreadsheet_key)
       @spreadsheet_key = spreadsheet_key
     end
@@ -17,11 +19,7 @@ module DataPitcher
 
     def clear_sheet
       worksheet.reload
-      (1..worksheet.num_rows).each do |row|
-        (1..worksheet.num_cols).each do |col|
-          worksheet[row, col] = ''
-        end
-      end
+      worksheet.delete_rows(1, worksheet.num_rows)
       worksheet.save
     end
 
@@ -29,16 +27,12 @@ module DataPitcher
       result = DataPitcher::Executor.new(sql_query).execute
       worksheet.reload
       # fill header
-      result.header.each.with_index(1) do |val, col_index|
-        worksheet[1, col_index] = val
-      end
+      worksheet.insert_rows(1, [result.header])
       # fill rows
-      result.rows.each.with_index(2) do |row, row_index|
-        row.each.with_index(1) do |val, col_index|
-          worksheet[row_index, col_index] = val
-        end
+      result.rows.each_slice(BATCH_SIZE).with_index do |array, batch_index|
+        worksheet.insert_rows(2 + batch_index * BATCH_SIZE, array)
+        worksheet.save
       end
-      worksheet.save
     end
 
     def replace_worksheet_with_query(sql_query)
