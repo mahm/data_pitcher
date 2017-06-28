@@ -5,7 +5,6 @@ require 'data_pitcher/result'
 require 'data_pitcher/spreadsheet'
 require 'data_pitcher/batch'
 require 'data_pitcher/command'
-require 'data_pitcher/core_ext/time'
 
 module DataPitcher
   class << self
