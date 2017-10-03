@@ -4,8 +4,9 @@ module DataPitcher
   class Spreadsheet
     BATCH_SIZE = 1000
 
-    def initialize(spreadsheet_key)
+    def initialize(spreadsheet_key, worksheet_title = nil)
       @spreadsheet_key = spreadsheet_key
+      @worksheet_title = worksheet_title
     end
 
     def spreadsheet
@@ -13,8 +14,12 @@ module DataPitcher
     end
 
     def worksheet
-      # NOTE: DataPitcher will access first sheet only
-      @worksheet ||= spreadsheet.worksheets.first
+      @worksheet ||=
+        if @worksheet_title
+          spreadsheet.worksheet_by_title(@worksheet_title)
+        else
+          spreadsheet.worksheets.first
+        end
     end
 
     def clear_sheet

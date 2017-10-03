@@ -1,7 +1,8 @@
 module DataPitcher
   class Command
-    def initialize(spreadsheet_key, sql_path, dry_run: true, index: 1)
+    def initialize(spreadsheet_key:, worksheet_title: nil, sql_path:, dry_run: true, index: 1)
       @spreadsheet_key = spreadsheet_key
+      @worksheet_title = worksheet_title
       @sql_path = sql_path
       @dry_run = dry_run
       @index = index
@@ -30,7 +31,7 @@ module DataPitcher
     end
 
     def spreadsheet
-      @spreadsheet ||= DataPitcher::Spreadsheet.new(@spreadsheet_key)
+      @spreadsheet ||= DataPitcher::Spreadsheet.new(@spreadsheet_key, @worksheet_title)
     end
 
     def executor
@@ -45,6 +46,7 @@ module DataPitcher
       <<-EOS
 ##{@index} command
   spreadsheet_key: #{@spreadsheet_key}
+  worksheet_title: #{@worksheet_title || '(first worksheet)'}
     valid?: #{spreadsheet.valid?}
   sql_path: #{@sql_path}
     valid?: #{executor.valid?}
