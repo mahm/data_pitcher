@@ -66,6 +66,7 @@ For example:
 # config/data_pitcher.yml
 data_pitcher:
   - spreadsheet_key: 1QlOBVmsEau8EupE5Kj7AqoHLQTjInoq0GpwPkW7_WdU
+    worksheet_title: Sheet2 # Optional. Using the first worksheet if omitted
     sql_path: <%= Rails.root.join('lib', 'sqls', 'conversion_rates.sql') %>
 ```
 
@@ -82,7 +83,8 @@ $ bundle exec rake data_pitcher:export:run
 Or, you can manually execute sending data programmatically as follows:
 
 ```ruby
-DataPitcher::Spreadsheet.new('<SPREADSHEET KEY>').replace_worksheet_with_query('<SQL QUERY STRING>')
+DataPitcher::Spreadsheet.new('<SPREADSHEET KEY>').replace_worksheet_with_query('<SQL QUERY STRING>') # When using the first worksheet
+DataPitcher::Spreadsheet.new('<SPREADSHEET KEY>', '<WORKSHEET TITLE>').replace_worksheet_with_query('<SQL QUERY STRING>')
 ```
 
 ### (Optionally) Check YAML definition
